@@ -38,11 +38,6 @@ jobs:
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
       
-    - name: Build Container
-      if: false
-      working-directory: ${{env.GITHUB_WORKSPACE}}/src/eShopLegacyWebForm
-      run: docker build -t khcommon.azurecr.io/eshoplegacywebforms:github .
-      
     - name: Docker Login
       # You may pin to the exact commit or the version.
       # uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
@@ -56,6 +51,7 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
         
     - name: Build and push Docker images
+      if: false
       uses: docker/build-push-action@v3.3.0
       with:
         build-args: "source=obj/Release/publish"
@@ -64,4 +60,8 @@ jobs:
         context:  ${{env.GITHUB_WORKSPACE}}/src/eShopLegacyWebForm
         tags: "khcommon.azurecr.io/modernise-winforms:github:0.1"
         
-
+    - name: Build Container
+      if: true
+      working-directory: ./src/eShopLegacyWebForm
+      run: docker build -t khcommon.azurecr.io/eshoplegacywebforms:github .
+      
