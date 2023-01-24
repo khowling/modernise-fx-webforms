@@ -62,6 +62,6 @@ jobs:
         
     - name: Build Container
       if: true
-      working-directory: src\eShopLegacyWebForm
+      working-directory: ${{env.GITHUB_WORKSPACE}}\src\eShopLegacyWebForm
       run: docker build -t khcommon.azurecr.io/eshoplegacywebforms:github .
       
