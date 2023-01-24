@@ -60,7 +60,7 @@ jobs:
         build-args: "source=obj/Release/publish"
         # Path to the Dockerfile
         file: "."
-        context: ${{env.GITHUB_WORKSPACE}}\src\eShopLegacyWebForm
+        context: src/eShopLegacyWebForm
         tags: "khcommon.azurecr.io/modernise-winforms:github:0.1"
         
 
