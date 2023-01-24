@@ -37,3 +37,30 @@ jobs:
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
+      
+    - name: Build Container
+      working-directory: ${{env.GITHUB_WORKSPACE}}/src/eShopLegacyWebForm
+      run: docker build -t khcommon.azurecr.io/eshoplegacywebforms:github .
+      
+    - name: Docker Login
+      # You may pin to the exact commit or the version.
+      # uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+      uses: docker/login-action@v2.1.0
+      with:
+        # Server address of Docker registry. If not set then will default to Docker Hub
+        registry: khcommon.azurecr.io
+        # Username used to log against the Docker registry
+        username: khcommon
+        # Password or personal access token used to log against the Docker registry
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+        
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v3.3.0
+      with:
+        build-args: "source=obj/Release/publish"
+        # Path to the Dockerfile
+        file: "."
+        context: ${{env.GITHUB_WORKSPACE}}/src/eShopLegacyWebForm
+        tags: "khcommon.azurecr.io/modernise-winforms:github:0.1"
+        
+
