@@ -68,15 +68,7 @@ jobs:
       if: true
       run: |
         az aks install-cli
-        $targetDir="$env:USERPROFILE\.azure-kubelogin"
-        $oldPath = [System.Environment]::GetEnvironmentVariable("Path","User")
-        $oldPathArray=($oldPath) -split ";"
-        if(-Not($oldPathArray -Contains "$targetDir")) {
-           write-host "Permanently adding $targetDir to User Path"
-           $newPath = "$oldPath;$targetDir" -replace ";+", ";"
-           [System.Environment]::SetEnvironmentVariable("Path",$newPath,"User")
-           $env:Path = [System.Environment]::GetEnvironmentVariable("Path","User"),[System.Environment]::GetEnvironmentVariable("Path","Machine") -join ";"
-        }
+        echo "$env:USERPROFILE\.azure-kubelogin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           
     - name: Azure login
       uses: azure/login@v1.4.6
@@ -86,11 +78,11 @@ jobs:
     - name: Get AKS Credentials
       run: |
        az aks get-credentials --resource-group az-k8s-cj7u-rg --name aks-az-k8s-cj7u
-       & "$env:USERPROFILE\.azure-kubelogin\kubelogin" convert-kubeconfig -l azurecli 
+       kubelogin convert-kubeconfig -l azurecli 
        kubectl get nodes
     
     - name: AKS Rolling Deploy
-      if: true
+      if: false
       working-directory: ${{ github.workspace }}
       run: |
        kubectl apply -f .\deploy.yml 
