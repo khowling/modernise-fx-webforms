@@ -72,9 +72,9 @@ jobs:
     - name: Build Container
       if: true
       working-directory: ${{ github.workspace }}/src/eShopLegacyWebForms
-      run: docker build -t ${{env.ACR_NAME}}.azurecr.io/modernise-fx-webforms:github:${{ github.run_number }} .
+      run: docker build -t ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }} .
       
     - name: Build Container
       if: true
       working-directory: ${{ github.workspace }}/src/eShopLegacyWebForms
-      run: docker push -t ${{env.ACR_NAME}}.azurecr.io/modernise-fx-webforms:github:${{ github.run_number }}
+      run: docker push -t ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }}
