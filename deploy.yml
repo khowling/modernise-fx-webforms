@@ -13,10 +13,10 @@ spec:
         app: fx-webform
     spec:
       nodeSelector:
-        "kubernetes.io/os": linux
+        "kubernetes.io/os": windows
       containers:
       - name: fx-webform
-        image: mcr.microsoft.com/azuredocs/azure-vote-front:v1
+        image: crazk8scj7ur4lzvcryvdkv4.azurecr.io/modernise/fx-webforms:dummy
         ports:
         - containerPort: 80
 ---
