@@ -8,6 +8,7 @@ on:
 
 env:
   # Path to the solution file relative to the root of the project.
+  PROJECT_NAME: "eShopLegacyWebForms"
   SOLUTION_FILE_PATH: .
   ACR_NAME: "crazk8scj7ur4lzvcryvdkv4"
 
@@ -39,7 +40,7 @@ jobs:
       working-directory: ${{ github.workspace }}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
+      run: msbuild /m /p:OutDir=PUBLISH /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
       
     - name: Docker Login
       if: true
@@ -66,15 +67,15 @@ jobs:
    
     - name: list directory
       if: false
-      working-directory: ${{ github.workspace }}/src/eShopLegacyWebForms
+      working-directory: ${{ github.workspace }}/src/${{env.PROJECT_NAME}}
       run:  dir
       
     - name: Build Container
       if: true
-      working-directory: ${{ github.workspace }}/src/eShopLegacyWebForms
-      run: docker build -t ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }} .
+      working-directory: ${{ github.workspace }}/src/${{env.PROJECT_NAME}}
+      run: docker build --build-arg source=PUBLISH/_PublishedWebsites/${{env.PROJECT_NAME}} -t ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }} .
       
     - name: Build Container
       if: true
-      working-directory: ${{ github.workspace }}/src/eShopLegacyWebForms
+      working-directory: ${{ github.workspace }}/src/${{env.PROJECT_NAME}}
       run: docker push -t ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }}
