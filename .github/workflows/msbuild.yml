@@ -78,4 +78,4 @@ jobs:
     - name: Build Container
       if: true
       working-directory: ${{ github.workspace }}/src/${{env.PROJECT_NAME}}
-      run: docker push -t ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }}
+      run: docker push ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }}
