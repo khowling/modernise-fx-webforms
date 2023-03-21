@@ -9,6 +9,7 @@ on:
 env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: .
+  ACR_NAME: "crazk8scj7ur4lzvcryvdkv4.azurecr.io"
 
   # Configuration type to build.
   # You can convert this to a build matrix if you need coverage of multiple configuration types.
@@ -44,7 +45,7 @@ jobs:
       uses: docker/login-action@v2.1.0
       with:
         # Server address of Docker registry. If not set then will default to Docker Hub
-        registry: khcommon.azurecr.io
+        registry: ${{env.ACR_NAME}}
         # Username used to log against the Docker registry
         username: khcommon
         # Password or personal access token used to log against the Docker registry
@@ -58,10 +59,15 @@ jobs:
         # Path to the Dockerfile
         file: "."
         context:  ${{env.GITHUB_WORKSPACE}}/src/eShopLegacyWebForm
-        tags: "khcommon.azurecr.io/modernise-winforms:github:0.1"
-        
+        tags: "${{env.ACR_NAME}}/modernise-fx-webforms:github:0.1"
+   
+    - name: list directory
+      if: true
+      working-directory: ${{ github.workspace }}
+      run: dir
+      
     - name: Build Container
       if: true
       working-directory: ${{ github.workspace }}\src\eShopLegacyWebForm
-      run: docker build -t khcommon.azurecr.io/eshoplegacywebforms:github .
+      run: docker build -t ${{env.ACR_NAME}}/modernise-fx-webforms:github:${{ github.run_number }} .
       
