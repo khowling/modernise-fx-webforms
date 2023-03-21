@@ -85,7 +85,8 @@ jobs:
         }
           
     - name: Set kubelogin credentials
-      run: kubelogin convert-kubeconfig -l azurecli 
+      run: |
+       & "$env:USERPROFILE\.azure-kubelogin\kubelogin" convert-kubeconfig -l azurecli 
       
       
     - name: Set AKS context
@@ -105,5 +106,5 @@ jobs:
         namespace: 'default'
         manifests: |
            deploy.yml
-        images: ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }}
+        images: ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github35
         pull-images: false 
