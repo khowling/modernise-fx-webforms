@@ -67,7 +67,7 @@ jobs:
     - name: list directory
       if: true
       working-directory: ${{ github.workspace }}/src
-      run: dir s
+      run: dir 
       
     - name: Build Container
       if: false
