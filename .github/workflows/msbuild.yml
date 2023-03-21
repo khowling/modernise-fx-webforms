@@ -56,12 +56,12 @@ jobs:
       working-directory: ${{ github.workspace }}/src/${{env.PROJECT_NAME}}
       run: docker build --build-arg source=PUBLISH/_PublishedWebsites/${{env.PROJECT_NAME}} -t ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }} .
       
-    - name: Build Container
+    - name: Push Container
       working-directory: ${{ github.workspace }}/src/${{env.PROJECT_NAME}}
       run: docker push ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }}
       
     - name: Azure login
-      uses: azure/login@v1.4.3
+      uses: azure/login@v1.4.6
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
           
