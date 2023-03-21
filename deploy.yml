@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fx-webform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fx-webform
+  template:
+    metadata:
+      labels:
+        app: fx-webform
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+      - name: fx-webform
+        image: mcr.microsoft.com/azuredocs/azure-vote-front:v1
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fx-webform
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: fx-webform
