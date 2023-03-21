@@ -9,7 +9,7 @@ on:
 env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: .
-  ACR_NAME: "crazk8scj7ur4lzvcryvdkv4.azurecr.io"
+  ACR_NAME: "crazk8scj7ur4lzvcryvdkv4"
 
   # Configuration type to build.
   # You can convert this to a build matrix if you need coverage of multiple configuration types.
@@ -45,9 +45,9 @@ jobs:
       uses: docker/login-action@v2.1.0
       with:
         # Server address of Docker registry. If not set then will default to Docker Hub
-        registry: ${{env.ACR_NAME}}
+        registry: ${{env.ACR_NAME}}.azurecr.io
         # Username used to log against the Docker registry
-        username: khcommon
+        username: ${{env.ACR_NAME}}
         # Password or personal access token used to log against the Docker registry
         password: ${{ secrets.REGISTRY_PASSWORD }}
         
@@ -59,7 +59,7 @@ jobs:
         # Path to the Dockerfile
         file: "."
         context:  ${{env.GITHUB_WORKSPACE}}/src/eShopLegacyWebForm
-        tags: "${{env.ACR_NAME}}/modernise-fx-webforms:github:0.1"
+        tags: "${{env.ACR_NAME}}.azurecr.io/modernise-fx-webforms:github:0.1"
    
     - name: list directory
       if: true
@@ -69,5 +69,5 @@ jobs:
     - name: Build Container
       if: true
       working-directory: ${{ github.workspace }}\src\eShopLegacyWebForm
-      run: docker build -t ${{env.ACR_NAME}}/modernise-fx-webforms:github:${{ github.run_number }} .
+      run: docker build -t ${{env.ACR_NAME}}.azurecr.io/modernise-fx-webforms:github:${{ github.run_number }} .
       
