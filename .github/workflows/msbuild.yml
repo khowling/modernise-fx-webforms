@@ -48,27 +48,9 @@ jobs:
       # uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
       uses: docker/login-action@v2.1.0
       with:
-        # Server address of Docker registry. If not set then will default to Docker Hub
         registry: ${{env.ACR_NAME}}.azurecr.io
-        # Username used to log against the Docker registry
         username: ${{env.ACR_NAME}}
-        # Password or personal access token used to log against the Docker registry
         password: ${{ secrets.REGISTRY_PASSWORD }}
-        
-    - name: Build and push Docker images
-      if: false
-      uses: docker/build-push-action@v3.3.0
-      with:
-        build-args: "source=obj/Release/publish"
-        # Path to the Dockerfile
-        file: "."
-        context:  ${{env.GITHUB_WORKSPACE}}/src/eShopLegacyWebForm
-        tags: "${{env.ACR_NAME}}.azurecr.io/modernise-fx-webforms:github:0.1"
-   
-    - name: list directory
-      if: false
-      working-directory: ${{ github.workspace }}/src/${{env.PROJECT_NAME}}
-      run:  dir
       
     - name: Build Container
       if: true
@@ -79,3 +61,30 @@ jobs:
       if: true
       working-directory: ${{ github.workspace }}/src/${{env.PROJECT_NAME}}
       run: docker push ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }}
+      
+    - name: Azure login
+        id: login
+        uses: azure/login@v1.4.3
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+    - name: Set AKS context
+        id: set-context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: az-k8s-cj7u-rg 
+          cluster-name: aks-az-k8s-cj7u
+          
+    - name: Setup kubectl
+        id: install-kubectl
+        uses: azure/setup-kubectl@v3
+        
+    - name: Deploy to AKS
+        id: deploy-aks
+        uses: Azure/k8s-deploy@v4
+        with:
+          namespace: 'default'
+          manifests: |
+             deploy.yaml
+          images: ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }}
+          pull-images: false 
