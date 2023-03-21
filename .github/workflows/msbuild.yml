@@ -79,6 +79,6 @@ jobs:
       with:
         namespace: 'default'
         manifests: |
-           deploy.yaml
+           deploy.yml
         images: ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }}
         pull-images: false 
