@@ -53,38 +53,32 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
       
     - name: Build Container
-      if: true
       working-directory: ${{ github.workspace }}/src/${{env.PROJECT_NAME}}
       run: docker build --build-arg source=PUBLISH/_PublishedWebsites/${{env.PROJECT_NAME}} -t ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }} .
       
     - name: Build Container
-      if: true
       working-directory: ${{ github.workspace }}/src/${{env.PROJECT_NAME}}
       run: docker push ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }}
       
     - name: Azure login
-        id: login
-        uses: azure/login@v1.4.3
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      uses: azure/login@v1.4.3
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
           
     - name: Set AKS context
-        id: set-context
-        uses: azure/aks-set-context@v3
-        with:
-          resource-group: az-k8s-cj7u-rg 
-          cluster-name: aks-az-k8s-cj7u
+      uses: azure/aks-set-context@v3
+      with:
+        resource-group: az-k8s-cj7u-rg 
+        cluster-name: aks-az-k8s-cj7u
           
     - name: Setup kubectl
-        id: install-kubectl
-        uses: azure/setup-kubectl@v3
+      uses: azure/setup-kubectl@v3
         
     - name: Deploy to AKS
-        id: deploy-aks
-        uses: Azure/k8s-deploy@v4
-        with:
-          namespace: 'default'
-          manifests: |
-             deploy.yaml
-          images: ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }}
-          pull-images: false 
+      uses: Azure/k8s-deploy@v4
+      with:
+        namespace: 'default'
+        manifests: |
+           deploy.yaml
+        images: ${{env.ACR_NAME}}.azurecr.io/modernise/fx-webforms:github${{ github.run_number }}
+        pull-images: false 
