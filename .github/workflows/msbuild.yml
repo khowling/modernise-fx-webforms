@@ -87,7 +87,11 @@ jobs:
     - name: Set kubelogin credentials
       run: |
        & "$env:USERPROFILE\.azure-kubelogin\kubelogin" convert-kubeconfig -l azurecli 
-      
+    
+    - name: AKS Rolling Deploy
+      working-directory: ${{ github.workspace }}
+      run: |
+       kubectl apply -f .\deploy.yml 
       
     - name: Set AKS context
       if: false
@@ -101,6 +105,7 @@ jobs:
       uses: azure/setup-kubectl@v3
         
     - name: Deploy to AKS
+      if: false
       uses: Azure/k8s-deploy@v4
       with:
         namespace: 'default'
