@@ -1,3 +1,4 @@
 *
+!PUBLISH\_PublishedWebsites\*
 !obj\Docker\publish\*
 !obj\Docker\empty\
